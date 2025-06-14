@@ -6,21 +6,22 @@ const MongoClient = require('mongodb').MongoClient
 const conectionString = 'mongodb+srv://franciscalandwehr:CRUDDataBase@cluster0.yqifjp6.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'
 const PORT = 3000
 
-MongoClient.connect(conectionString, { useUnifiedTopology: true})
+MongoClient.connect(conectionString)
     .then(client => {
         console.log('Connected to Database')
         const db = client.db('star-wars-quotes')
         const quotesCollection = db.collection('quotes')
 
         app.set('view engine', 'ejs')
-
         app.use(bodyparser.urlencoded({extended: true}))
+        app.use(express.static('public'))
+        app.use(bodyparser.json())
 
         app.get('/', (request, response) =>{
             //respond.send('This is Lit!!!')
             quotesCollection.find().toArray()
                 .then(results => {
-                    console.log(results)
+                    //console.log(results)
                     response.render('index.ejs',{quotes: results})
                 })
                 .catch(error => console.log(error))            
@@ -28,8 +29,26 @@ MongoClient.connect(conectionString, { useUnifiedTopology: true})
         app.post('/quotes', (request, response)=>{
             quotesCollection.insertOne(request.body)
             .then(result => {
-                console.log(result)
+                //console.log(result)
                 response.redirect('/')
+            })
+            .catch(error => console.error(error))
+        })
+        app.put('/quotes', (request, response) =>{
+            quotesCollection.findOneAndUpdate(
+                {name: 'Gordo'},
+                {$set:{
+                    name: request.body.name,
+                    quote: request.body.quote
+                }},
+                {
+                    upsert: true,
+                    returnDocument: 'after'
+                }
+            )
+            .then(result => {
+                console.log(result)
+                response.json()
             })
             .catch(error => console.error(error))
         })
