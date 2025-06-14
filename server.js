@@ -1,0 +1,40 @@
+//CRUDDataBase
+const express = require('express')
+const bodyparser = require('body-parser')
+const app = express()
+const MongoClient = require('mongodb').MongoClient
+const conectionString = 'mongodb+srv://franciscalandwehr:CRUDDataBase@cluster0.yqifjp6.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'
+const PORT = 3000
+
+MongoClient.connect(conectionString, { useUnifiedTopology: true})
+    .then(client => {
+        console.log('Connected to Database')
+        const db = client.db('star-wars-quotes')
+        const quotesCollection = db.collection('quotes')
+
+        app.set('view engine', 'ejs')
+
+        app.use(bodyparser.urlencoded({extended: true}))
+
+        app.get('/', (request, response) =>{
+            //respond.send('This is Lit!!!')
+            quotesCollection.find().toArray()
+                .then(results => {
+                    console.log(results)
+                    response.render('index.ejs',{quotes: results})
+                })
+                .catch(error => console.log(error))            
+        })
+        app.post('/quotes', (request, response)=>{
+            quotesCollection.insertOne(request.body)
+            .then(result => {
+                console.log(result)
+                response.redirect('/')
+            })
+            .catch(error => console.error(error))
+        })
+        app.listen(PORT, ()=>{
+            console.log(`Your browser is running on port: ${PORT}`)
+        })
+})
+    .catch(error => console.error(error))
