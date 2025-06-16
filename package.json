@@ -13,6 +13,7 @@
     "body-parser": "^2.2.0",
     "ejs": "^3.1.10",
     "express": "^5.1.0",
+    "heroku": "^8.7.1",
     "mongodb": "^6.17.0"
   },
   "devDependencies": {

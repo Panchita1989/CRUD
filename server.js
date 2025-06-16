@@ -4,7 +4,7 @@ const bodyparser = require('body-parser')
 const app = express()
 const MongoClient = require('mongodb').MongoClient
 const conectionString = 'mongodb+srv://franciscalandwehr:CRUDDataBase@cluster0.yqifjp6.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'
-const PORT = 3000
+const PORT = process.env.PORT || 3000
 
 MongoClient.connect(conectionString)
     .then(client => {
