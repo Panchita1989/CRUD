@@ -51,6 +51,25 @@ MongoClient.connect(conectionString)
             })
             .catch(error => console.error(error))
         })
+        app.delete('/quotes/one', (req, res)=>{
+            quotesCollection.deleteOne(
+                {name: req.body.name}
+            )
+            .then(result =>{
+                res.json('Deleted Darth Vedars quote')
+            })
+            .catch(error => console.error(error))
+            
+        })
+        app.delete('/quotes/all', (req, res) =>{
+            quotesCollection.deleteMany({})
+            .then(result =>{
+                 res.json('Deleted all quotes')
+            })
+            .catch(error => console.error(error))
+        })
+            
+            
         app.listen(PORT, ()=>{
             console.log(`Your browser is running on port: ${PORT}`)
         })
