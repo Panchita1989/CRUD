@@ -9,4 +9,5 @@ update.addEventListener('click', _ => {
             quote: 'I find your lack of faith disturbing.'
         })
     })
+    .then(()=>window.location.reload())
 })

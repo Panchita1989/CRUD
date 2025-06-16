@@ -42,13 +42,12 @@ MongoClient.connect(conectionString)
                     quote: request.body.quote
                 }},
                 {
-                    upsert: true,
-                    returnDocument: 'after'
+                    upsert: true
                 }
             )
             .then(result => {
                 console.log(result)
-                response.json()
+                response.json('Success')
             })
             .catch(error => console.error(error))
         })
